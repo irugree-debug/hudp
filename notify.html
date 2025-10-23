@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" type="text/css" href="css/notify.css" />
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@700&display=swap" rel="stylesheet">                   
+    </head>
+
+    <body>		
+        <div class="notifications_frame">
+            <div class="notifications_frame_block"></div>
+        </div>
+        <script>
+            var frame = document.getElementsByClassName("notifications_frame")[0];
+            var frame_b = document.getElementsByClassName("notifications_frame_block")[0];
+
+            cef.on("cef_notify_browser", (time, format_text, type) => {
+                let div = document.createElement('div');
+                div.className = "notify_bock";
+                div.id = "notify_bock";
+                frame_b.append(div);
+    
+                let text = document.createElement('div');
+                text.className = "notify_bock_text";	        
+				if (type == 0) text.style = "background: linear-gradient(180deg, #35332ECD, #B77F38CD);";
+                else if (type == 1) text.style = "background: linear-gradient(180deg, #35332ECD, #3876B7CD);";
+                else if (type == 2) text.style = "background: linear-gradient(180deg, #35332ECD, #F04245CD);";  
+				
+                div.append(text);
+
+                let notifyIcon = document.createElement('img');
+                notifyIcon.className = "typeClass";
+                
+                if(type == 0) notifyIcon.src = "img/success.png";
+                else if(type == 1) notifyIcon.src = "img/warning.png";
+                else if(type == 2) notifyIcon.src = "img/error.png";
+
+                text.append(notifyIcon);
+
+                let notifyHeader = document.createElement('div');
+                notifyHeader.className = "notify_header";
+
+                if(type == 0) notifyHeader.innerHTML = "Успешно";
+                else if(type == 1) notifyHeader.innerHTML = "Информация";
+                else if(type == 2) notifyHeader.innerHTML = "Ошибка";  
+                
+                text.append(notifyHeader);
+
+                let notifyText = document.createElement('div');
+                notifyText.className = "notify_text";
+                notifyText.innerHTML = `${format_text}`;
+
+                text.append(notifyText);
+
+                let line = document.createElement('div');
+                line.className = "notify-line";
+                if (type == 0) line.style = "background-color: #93c066";
+                else if (type == 1) line.style = "background-color: #53a4f4";
+                else if (type == 2) line.style = "background-color: #f04245";                
+                div.append(line);
+
+                line.width = "100%";
+                line.animate({width: '0%'}, time + 500);
+    
+                var animation = div.animate([{
+                    opacity: '0',
+                    transform: 'translateY(-100%)'
+                }, {
+                    opacity: '1',
+                    transform: 'translateY(0)'
+                }], 500);
+                animation.addEventListener('finish', function() {
+                    setTimeout(elem_remove, parseInt(time), div);
+                });
+                frame.scrollTop = frame.scrollHeight;
+            });   
+    
+            function elem_remove(elem) {
+                var animation = elem.animate([{
+                    opacity: '1',
+                    transform: 'translateY(0)'
+                }, {
+                    opacity: '0',
+                    transform: 'translateY(-100%)'
+                }], 1000);
+                animation.addEventListener('finish', function() {
+                    elem.remove();
+                });
+            }         
+        </script>
+    </body>
+    
+</html>    
